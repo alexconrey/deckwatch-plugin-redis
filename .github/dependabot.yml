@@ -1,0 +1,42 @@
+# Dependabot version updates, weekly: cargo, including the
+# deckwatch-plugin-sdk git dependency, and GitHub Actions.
+version: 2
+
+updates:
+  - package-ecosystem: cargo
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+    # Wait a few days after a release before proposing it, to avoid yanked or
+    # compromised releases. Security updates bypass this.
+    cooldown:
+      default-days: 3
+      semver-major-days: 7
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      cargo-minor-patch:
+        update-types: [minor, patch]
+    ignore:
+      # The SDK's v0.5.1, v0.7.0 and v0.8.0 tags carry stale Cargo.toml
+      # versions (0.5.0, 0.6.0, 0.6.0), and Dependabot fails trying to move
+      # the git dependency to v0.8.0. Only tags from v0.10.0 on are candidates.
+      - dependency-name: deckwatch-plugin-sdk
+        versions: ["< 0.10.0"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+    # github-actions supports only default-days.
+    cooldown:
+      default-days: 3
+    commit-message:
+      prefix: "chore(ci)"
+    groups:
+      github-actions:
+        patterns: ["*"]
